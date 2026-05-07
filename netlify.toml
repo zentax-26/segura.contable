@@ -3,7 +3,7 @@
 # ═══════════════════════════════════════════════════════
 
 [build]
-  command = ""
+  command = "echo 'Static site — no build needed'"
   publish = "."
 
 # HTML: sin caché (siempre versión más reciente)
