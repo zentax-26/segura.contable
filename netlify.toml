@@ -2,6 +2,10 @@
 # NETLIFY CONFIG — Segura Contable
 # ═══════════════════════════════════════════════════════
 
+[build]
+  command = ""
+  publish = "."
+
 # HTML: sin caché (siempre versión más reciente)
 [[headers]]
   for = "/*.html"
