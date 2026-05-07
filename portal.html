@@ -4541,71 +4541,6 @@ function renderMetas() {
       </div>`}).join('')
 }
 
-function renderPlanner() {
-  const d = getData()
-  const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']
-  document.getElementById('cal-heads').innerHTML = dias.map(d=>`<div class="planner-head">${d}</div>`).join('')
-  const titulo = new Date(calYear,calMonth,1).toLocaleDateString('es-CL',{month:'long',year:'numeric'})
-  document.getElementById('cal-titulo').textContent = titulo.charAt(0).toUpperCase()+titulo.slice(1)
-  const firstDay = new Date(calYear,calMonth,1).getDay()
-  const daysInMonth = new Date(calYear,calMonth+1,0).getDate()
-  const daysInPrev = new Date(calYear,calMonth,0).getDate()
-
-  // Mapear eventos
-  const evs = {}
-  const addEv = (fecha,tipo,desc,monto) => {
-    if(!fecha) return
-    const dd = fecha.split('T')[0]
-    const [y,m2,day] = dd.split('-').map(Number)
-    if(y===calYear && m2-1===calMonth) {
-      if(!evs[day]) evs[day]=[]
-      evs[day].push({tipo,desc,monto})
-    }
-  }
-  d.ingresos.forEach(r=>addEv(r.fecha,'ingreso',r.desc,r.monto))
-  d.gastos.forEach(r=>addEv(r.fecha,'gasto',r.desc,r.monto))
-  d.recordatorios.forEach(r=>addEv(r.fecha,'recordatorio',r.desc,0))
-
-  let html = ''
-  for(let i=0;i<firstDay;i++) html+=`<div class="planner-day other"><div class="day-num">${daysInPrev-firstDay+i+1}</div></div>`
-  for(let day=1;day<=daysInMonth;day++) {
-    const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`
-    const isT = ds===HOY
-    const dayEvs = evs[day]||[]
-    html+=`<div class="planner-day${isT?' today':''}">
-      <div class="day-num">${day}</div>
-      ${dayEvs.slice(0,2).map(e=>`<div class="planner-ev ev-${e.tipo}" title="${e.desc}">${e.desc.slice(0,10)}</div>`).join('')}
-      ${dayEvs.length>2?`<div style="font-size:9px;color:var(--gris-s)">+${dayEvs.length-2}</div>`:''}
-    </div>`
-  }
-  const total = firstDay+daysInMonth
-  for(let i=1;i<=(total%7===0?0:7-total%7);i++) html+=`<div class="planner-day other"><div class="day-num">${i}</div></div>`
-  document.getElementById('cal-body').innerHTML = html
-
-  // Tabla eventos del mes
-  const f1=`${calYear}-${String(calMonth+1).padStart(2,'0')}-01`
-  const f2=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(daysInMonth).padStart(2,'0')}`
-  const todosEvs = [
-    ...d.ingresos.filter(r=>r.fecha>=f1&&r.fecha<=f2).map(r=>({fecha:r.fecha,tipo:'Ingreso',desc:r.desc,monto:r.monto,sign:1})),
-    ...d.gastos.filter(r=>r.fecha>=f1&&r.fecha<=f2).map(r=>({fecha:r.fecha,tipo:'Gasto',desc:r.desc,monto:r.monto,sign:-1})),
-    ...d.recordatorios.filter(r=>r.fecha>=f1&&r.fecha<=f2).map(r=>({fecha:r.fecha,tipo:'Recordatorio',desc:r.desc,monto:0,sign:0})),
-  ].sort((a,b)=>new Date(a.fecha)-new Date(b.fecha))
-  document.getElementById('planner-eventos').innerHTML = todosEvs.length===0
-    ? `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--gris-s)">Sin eventos este mes</td></tr>`
-    : todosEvs.map(e=>`<tr>
-        <td style="font-size:12px;color:var(--gris-s)">${fdate(e.fecha)}</td>
-        <td><span class="bdg ${e.tipo==='Ingreso'?'ok':e.tipo==='Gasto'?'pend':'warn'}">${e.tipo}</span></td>
-        <td style="font-weight:500">${e.desc}</td>
-        <td class="${e.sign>0?'ap':e.sign<0?'an':''} nbold">${e.monto>0?fmt(e.monto):'—'}</td>
-      </tr>`).join('')
-}
-
-function calNav(dir) {
-  calMonth+=dir
-  if(calMonth>11){calMonth=0;calYear++}
-  if(calMonth<0){calMonth=11;calYear--}
-  renderPlanner()
-}
 
 function renderReportes() {
   const d = getData()
@@ -4904,12 +4839,12 @@ const FORMS = {
       <div class="fg-grp"><label class="fg-lbl">Fecha</label><input class="fi" id="f-fecha" type="date" value="${dat.fecha||HOY}"></div>
       <div class="fg-grp full"><label class="fg-lbl">Nota (opcional)</label><input class="fi" id="f-nota" value="${dat.nota||''}" placeholder="Ej: Proyecto ABC"></div>
     </div>`,
-    save:()=>{
+    save: async ()=>{
       const p={id:dat.id||uid(),desc:vv('f-desc'),cat:vv('f-cat'),monto:parseFloat(vv('f-monto'))||0,fecha:vv('f-fecha'),nota:vv('f-nota')}
       if(!p.desc||!p.monto) return showMsg('ing-msg','err','Completa los campos requeridos')
       const d=getData()
-      if(isEdit) d.ingresos=d.ingresos.map(r=>r.id===p.id?p:r)
-      else d.ingresos.unshift(p)
+      if(isEdit) { await sbUpdate('portal_ingresos', p.id, {descripcion:p.desc,cat:p.cat,monto:p.monto,fecha:p.fecha,nota:p.nota}); d.ingresos=d.ingresos.map(r=>r.id===p.id?p:r) }
+      else { const saved = await sbInsert('portal_ingresos',{id:p.id,descripcion:p.desc,cat:p.cat,monto:p.monto,fecha:p.fecha,nota:p.nota,cliente_email:currentUser.email}); if(saved?.id) p.id=saved.id; d.ingresos.unshift(p) }
       closeModal(); _editId=null; renderAll()
     }
   }),
