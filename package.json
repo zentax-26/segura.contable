@@ -15,7 +15,11 @@
     "react": "latest",
     "react-dom": "latest",
     "lucide-react": "latest",
-    "recharts": "latest"
+    "recharts": "latest",
+    "chart.js": "latest",
+    "xlsx": "latest",
+    "jspdf": "latest",
+    "mammoth": "latest"
   },
   "devDependencies": {}
 }
