@@ -116,7 +116,7 @@ async function login() {
     var admin = ADMINS.find(function(u) { return u.email === email && u.pass === pass })
     if (admin) {
       sessionStorage.setItem('sc_user', JSON.stringify(admin))
-      window.location.href = 'portal.html'
+      window.location.href = '/portal.html'
       return
     }
     // Cliente desde Supabase
@@ -124,7 +124,7 @@ async function login() {
     if (res.error || !res.data) { showErr('Correo o contraseña incorrectos'); return }
     if (!res.data.activo) { showErr('Cuenta desactivada. Contacta a tu asesor.'); return }
     sessionStorage.setItem('sc_user', JSON.stringify(res.data))
-    window.location.href = 'portal.html'
+    window.location.href = '/portal.html'
   } catch(e) {
     showErr('Error de conexión')
     console.error(e)
