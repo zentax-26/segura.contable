@@ -1277,6 +1277,7 @@ function renderCotizacionesCli() {
 window.abrirCambioAvatar = abrirCambioAvatar
 window.renderGastos = renderGastos
 window.renderIngresos = renderIngresos
+window.setABN = setABN
 
 })();
 
