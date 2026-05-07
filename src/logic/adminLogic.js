@@ -2,7 +2,7 @@ import { sb } from '../lib/supabase.js'
 window.sb = sb
 
 // Wrap in IIFE to avoid duplicate identifier issues in module scope
-;(function() {
+try { ;(function() {
 
 // ══ AUTH GUARD ══
 // SB_URL, SB_KEY y sb ya definidos en el script global
@@ -2474,7 +2474,7 @@ function initAdmin() {
 }
 window._initAdmin = initAdmin
 
-})()
+})() } catch(e) { console.error('[AdminLogic] Error en inicialización:', e) }
 
 export function initAdmin() {
   if (typeof window._initAdmin === 'function') window._initAdmin()

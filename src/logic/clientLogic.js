@@ -2,7 +2,7 @@ import { sb } from '../lib/supabase.js'
 window.sb = sb
 
 // Wrap in IIFE to avoid duplicate identifier issues in module scope
-;(function() {
+try { ;(function() {
 
 // ══ AUTH: Leer sesión desde index.html ══
 ;(function initFromSession() {
@@ -1282,11 +1282,11 @@ window.renderIngresos = renderIngresos
 
 function initCliente() {
   window._SC_SESSION_USER = window._PORTAL_USER
-  if (typeof doLogin === 'function') doLogin()
+  if (typeof window._doLogin === 'function') window._doLogin()
 }
 window._initCliente = initCliente
 
-})()
+})() } catch(e) { console.error('[ClientLogic] Error en inicialización:', e) }
 
 export function initCliente() {
   if (typeof window._initCliente === 'function') window._initCliente()
