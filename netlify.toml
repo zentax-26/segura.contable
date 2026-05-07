@@ -3,8 +3,8 @@
 # ═══════════════════════════════════════════════════════
 
 [build]
-  command = "echo 'Static site — no build needed'"
-  publish = "."
+  command = "mkdir -p dist && cp index.html portal.html sw.js manifest.json icon-192.png icon-512.png _redirects dist/"
+  publish = "dist"
 
 # HTML: sin caché (siempre versión más reciente)
 [[headers]]
