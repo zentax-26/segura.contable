@@ -16,6 +16,10 @@ export default function LoginPage({ onLogin }) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    window.LOGO_B64 = LOGO_B64  // Make logo available for admin portal
+  }, [])
+
+  useEffect(() => {
     const handleKey = (e) => { if (e.key === 'Enter') handleLogin() }
     document.addEventListener('keydown', handleKey)
     return () => document.removeEventListener('keydown', handleKey)

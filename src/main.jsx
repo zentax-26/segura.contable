@@ -9,6 +9,7 @@ import { jsPDF } from 'jspdf'
 window.Chart = Chart
 window.XLSX = XLSX
 window.jspdf = { jsPDF }
+window.LOGO_B64 = '' // placeholder; LoginPage.jsx sets the real value on login
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')

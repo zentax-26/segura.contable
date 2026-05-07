@@ -936,6 +936,8 @@ export default function AdminPortal({ user, onLogout }) {
     window._PORTAL_ROL = user.rol
     window.__appLogout = onLogout
     ref.current.innerHTML = ADMIN_HTML
+    const vista = ref.current.querySelector('#vista-admin')
+    if (vista) vista.style.display = 'block'
     initAdmin()
   }, [])
   return <div ref={ref} style={{minHeight:'100vh'}} />

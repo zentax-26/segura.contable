@@ -470,6 +470,8 @@ export default function ClientPortal({ user, onLogout }) {
     window.__appLogout = onLogout
     window._SC_SESSION_USER = user
     ref.current.innerHTML = CLIENT_HTML
+    const vista = ref.current.querySelector('#vista-cliente')
+    if (vista) vista.style.display = 'block'
     initCliente()
   }, [])
   return <div ref={ref} style={{minHeight:'100vh'}} />

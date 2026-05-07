@@ -13,11 +13,8 @@ window.sb = sb
   window._SC_USER = user
 })()
 
-// ══════════════════════════════════════════════════════
-// ══════════════════════════════════════════════════════
-// LOGO - se setea en initAdmin()
-// ══════════════════════════════════════════════════════
-// LOGO_B64 ya está definido en el script global superior; se evita redeclararlo para Netlify/Chrome.
+// LOGO_B64 — may be set on window by main.jsx; fallback to empty string
+var LOGO_B64 = window.LOGO_B64 || ''
 
 
 // ══════════════════════════════════════════════════════
@@ -2468,7 +2465,7 @@ window.verPerfilCliente = verPerfilCliente
 function initAdmin() {
   window._SC_USER = window._PORTAL_USER
   const logoImgs = document.querySelectorAll('#logo-img')
-  logoImgs.forEach(img => img.src = 'data:image/jpeg;base64,' + LOGO_B64)
+  logoImgs.forEach(img => img.src = LOGO_B64 ? 'data:image/jpeg;base64,' + LOGO_B64 : '/icon-192.png')
   const cfgEl = document.getElementById('cfg-nombre-display')
   if (cfgEl) cfgEl.textContent = window._PORTAL_USER.nombre || 'Admin'
   if (typeof go === 'function') go('dashboard', null)
