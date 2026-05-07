@@ -151,8 +151,6 @@ const ACCIONES = {dashboard:'+ Nuevo Ingreso',ingresos:'+ Ingreso',gastos:'+ Gas
 let empresaActiva = null, editId = null, curPanel = 'dashboard', charts = {}
 let calYear = new Date().getFullYear(), calMonth = new Date().getMonth()
 
-document.getElementById('period-lbl').textContent = new Date().toLocaleDateString('es-MX',{month:'long',year:'numeric'})
-
 const fmt = n => '$' + Number(n||0).toLocaleString('es-MX')
 const fd = s => s && s !== '—' ? new Date(s+'T12:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—'
 const uid = () => Math.random().toString(36).slice(2,8)
@@ -2464,6 +2462,8 @@ window.verPerfilCliente = verPerfilCliente
 
 function initAdmin() {
   window._SC_USER = window._PORTAL_USER
+  const _pl = document.getElementById('period-lbl')
+  if (_pl) _pl.textContent = new Date().toLocaleDateString('es-MX',{month:'long',year:'numeric'})
   const logoImgs = document.querySelectorAll('#logo-img')
   logoImgs.forEach(img => img.src = LOGO_B64 ? 'data:image/jpeg;base64,' + LOGO_B64 : '/icon-192.png')
   const cfgEl = document.getElementById('cfg-nombre-display')
