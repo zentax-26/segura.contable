@@ -1043,7 +1043,7 @@ Ejemplo: El trabajador {{nombre_empleado}}, RUT {{rut_empleado}}..."></div>
       </div>
 
       <button class="lf-btn" onclick="doLogin()">Ingresar →</button>
-      <div class="lf-demo">Acceso demo: <span onclick="doDemo()">Entrar sin cuenta</span></div>
+      <div class="lf-demo">Acceso demo: <span onclick="_doDemo()">Entrar sin cuenta</span></div>
 
       
       <div id="role-info" style="margin-top:16px;padding:12px 14px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font-size:12px;color:rgba(255,255,255,.4);line-height:1.6">
@@ -3275,8 +3275,8 @@ function openSidebar() {
   const sb = document.getElementById('sidebar')
   const overlay = document.getElementById('sb-overlay')
   if (!sb) return
-  if (window.innerWidth <= 768) {
-    sb.classList.add('mobile-open')
+  if (window.innerWidth <= 900) {
+    sb.classList.add('open')
     if (overlay) overlay.classList.add('open')
   } else {
     if (sbCollapsed) toggleSidebar()
@@ -3286,7 +3286,7 @@ function openSidebar() {
 function closeSidebar() {
   const sb = document.getElementById('sidebar')
   const overlay = document.getElementById('sb-overlay')
-  if (sb) sb.classList.remove('mobile-open')
+  if (sb) sb.classList.remove('open')
   if (overlay) overlay.classList.remove('open')
 }
 
@@ -3445,13 +3445,13 @@ function openModalUsuario(id) {
     </div>
   `
 
-  document.getElementById('modal-title').textContent = u ? 'Editar Usuario' : 'Nuevo Usuario del Portal'
-  document.getElementById('modal-body').innerHTML = html
-  const saveBtn = document.getElementById('modal-save')
+  document.getElementById('m-title').textContent = u ? 'Editar Usuario' : 'Nuevo Usuario del Portal'
+  document.getElementById('m-body').innerHTML = html
+  const saveBtn = document.getElementById('m-save')
   saveBtn.style.display = 'block'
   saveBtn.textContent = 'Guardar'
   saveBtn.onclick = () => guardarUsuario(u?.id || null)
-  document.getElementById('modal').style.display = 'flex'
+  document.getElementById('overlay').style.display = 'flex'
 }
 
 function editarUsuario(id) { openModalUsuario(id) }
@@ -3472,7 +3472,7 @@ async function guardarUsuario(id) {
   if (!nombre || !email) return showM('Nombre y correo son obligatorios.', false)
   if (!id && !pass) return showM('La contraseña es obligatoria para nuevos usuarios.', false)
 
-  const saveBtn = document.getElementById('modal-save')
+  const saveBtn = document.getElementById('m-save')
   saveBtn.disabled = true; saveBtn.textContent = 'Guardando…'
 
   try {
